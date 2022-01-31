@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="1/26/2022 1:37:02 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-UUF03KG"
+  DTS:CreatorName="DESKTOP-UUF03KG\ile_s"
+  DTS:DTSID="{865ABA03-51E0-430B-B9E5-3B0317486B73}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.170"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package"
+  DTS:PackageType="5"
+  DTS:VersionBuild="15"
+  DTS:VersionGUID="{D28BD69B-1BF7-47E9-902B-B891F11CACA5}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[ChinookDates.sql]"
+      DTS:CreationName="FILE"
+      DTS:DTSID="{7D464E57-9027-482C-8F49-46D1F3F048BB}"
+      DTS:ObjectName="ChinookDates.sql">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="C:\Users\ile_s\source\repos\melodica_ssis\ChinookDates.sql" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Create_Tables_Staging.sql]"
+      DTS:CreationName="FILE"
+      DTS:DTSID="{96739AE5-DE71-4E27-9398-EEBEFA98C047}"
+      DTS:ObjectName="Create_Tables_Staging.sql">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="C:\Users\ile_s\source\repos\melodica_ssis\Create_Tables_Staging.sql" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.Chinook]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{B98AA844-B249-43C2-B46D-C454BFB810E5}"
+      DTS:ObjectName="localhost.Chinook">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=Chinook;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.ChinookStaging]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{D4AF01EE-2F31-4E98-98A6-7477F986F7D1}"
+      DTS:ObjectName="localhost.ChinookStaging">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=ChinookStaging;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Populate_Tables_Staging.sql]"
+      DTS:CreationName="FILE"
+      DTS:DTSID="{A2C52FB9-7253-40B9-9643-0EC8FC57E669}"
+      DTS:ObjectName="Populate_Tables_Staging.sql">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="C:\Users\ile_s\source\repos\melodica_ssis\Populate_Tables_Staging.sql" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Create ChinookStaging"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Checks if ChinookStaging exists"
+      DTS:DTSID="{B0E2341A-A178-4624-B909-57494EF1DB98}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create ChinookStaging"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{B98AA844-B249-43C2-B46D-C454BFB810E5}"
+          SQLTask:SqlStatementSource="USE MASTER &#xA;GO&#xA;&#xA;IF NOT EXISTS(SELECT * FROM sys.sysdatabases where name = 'ChinookStaging')&#xA;&#x9;CREATE DATABASE ChinookStaging&#xA;ELSE&#xA;&#x9;ALTER DATABASE  ChinookStaging SET &#x9;SINGLE_USER WITH ROLLBACK IMMEDIATE&#xA;GO&#xA;&#x9;DROP DATABASE ChinookStaging ;&#xA;&#x9;CREATE DATABASE ChinookStaging;&#xA;GO &#xA;&#xA;USE ChinookStaging&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create Tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Creates all necessary tables for the staging area"
+      DTS:DTSID="{EB0AE925-D5EC-47DD-80AA-5DF7C175799B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create Tables"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D4AF01EE-2F31-4E98-98A6-7477F986F7D1}"
+          SQLTask:SqlStmtSourceType="FileConnection"
+          SQLTask:SqlStatementSource="Create_Tables_Staging.sql" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Insert Dates"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Introduce the DimDate into Staging"
+      DTS:DTSID="{8BAEFE4F-F310-469F-81CA-CC076D7C9901}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Insert Dates"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D4AF01EE-2F31-4E98-98A6-7477F986F7D1}"
+          SQLTask:SqlStmtSourceType="FileConnection"
+          SQLTask:SqlStatementSource="ChinookDates.sql" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Insert Into Staging Tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Populates the staging area"
+      DTS:DTSID="{225830D3-4C1E-426C-BAF2-3902AA89E873}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Insert Into Staging Tables"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D4AF01EE-2F31-4E98-98A6-7477F986F7D1}"
+          SQLTask:SqlStmtSourceType="FileConnection"
+          SQLTask:SqlStatementSource="Populate_Tables_Staging.sql" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{5829113C-4D24-4AAA-B8EC-97BEFEFBA6BE}"
+      DTS:From="Package\Create ChinookStaging"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Create Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{B701C6A1-94FE-4818-B828-AEF8750B618B}"
+      DTS:From="Package\Create Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Insert Into Staging Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{4E436A18-9149-4431-B3E1-B2033F685A83}"
+      DTS:From="Package\Create Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Insert Dates" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib">
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="218.666666666667,241">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,126"
+              Start="0,0"
+              End="0,118.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,118.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="263.666666666667,241">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="194.833333333333,130"
+              Start="0,0"
+              End="194.833333333333,122.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.8571428571429" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,48.8571428571429"
+                    Point2="0,52.8571428571429"
+                    Point3="4,52.8571428571429" />
+                  <mssgle:LineSegment
+                    End="190.833333333333,52.8571428571429" />
+                  <mssgle:CubicBezierSegment
+                    Point1="190.833333333333,52.8571428571429"
+                    Point2="194.833333333333,52.8571428571429"
+                    Point3="194.833333333333,56.8571428571429" />
+                  <mssgle:LineSegment
+                    End="194.833333333333,122.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="144,42"
+          Id="Package\Create Tables"
+          TopLeft="14.5,149.5" />
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Create ChinookStaging"
+          TopLeft="5.5,5.5" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="86.75,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,102"
+              Start="0,0"
+              End="0,94.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,94.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <GroupLayout
+          Text="Create Staging Area"
+          ParentId="Package"
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="174,246"
+          Size="174,289"
+          Id="30db82b6-3fdd-42a5-b8f1-696c94226b56"
+          TopLeft="155,5.5">
+          <GroupLayout.ChildrenIds>
+            <s:String>Package\Create Tables</s:String>
+            <s:String>Package\Create ChinookStaging</s:String>
+            <s:String>Package.PrecedenceConstraints[Constraint]</s:String>
+          </GroupLayout.ChildrenIds>
+        </GroupLayout>
+        <NodeLayout
+          Size="137,42"
+          Id="Package\Insert Dates"
+          TopLeft="277.5,9.5" />
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Insert Into Staging Tables"
+          TopLeft="5.5,5.5" />
+        <GroupLayout
+          Text="Inserts"
+          ParentId="Package"
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="420,106"
+          Size="420,149"
+          Id="cc054db6-cc74-4b25-9386-488f05941449"
+          TopLeft="112.5,317.5">
+          <GroupLayout.ChildrenIds>
+            <s:String>Package\Insert Dates</s:String>
+            <s:String>Package\Insert Into Staging Tables</s:String>
+          </GroupLayout.ChildrenIds>
+        </GroupLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
